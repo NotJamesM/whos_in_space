@@ -1,4 +1,6 @@
-import jdk.nashorn.internal.parser.JSONParser;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,35 +9,45 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * Created by merri on 20/12/2016.
+ * Created by NotJamesM on 20/12/2016.
  */
 public class Main {
 
     private final String api_url = "http://api.open-notify.org/astros.json";
-    String data;
 
     public Main() {
-        getData();
+        parseData(getData());
     }
 
-    private void getData() {
+    public static void main(String[] args) {
+        Main m = new Main();
+    }
+
+    private String getData() {
         try {
             URL url = new URL(api_url);
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            data = reader.readLine();
+            String data = reader.readLine();
             reader.close();
+            return data;
         } catch (MalformedURLException e) {
             System.out.println("URL Error.");
         } catch (IOException e) {
             System.out.println("Read error.");
         }
+        return null;
     }
 
-    private void parseData(){
-        JSONParser pasrser = JSONParser
-    }
-
-    public static void main(String[] args){
-        Main m = new Main();
+    private JSONObject parseData(String data) {
+        System.out.println(data);
+        JSONParser parser = new JSONParser();
+        try {
+            Object obj = parser.parse(data);
+            JSONObject jsonObject = (JSONObject) obj;
+            return jsonObject;
+        } catch (ParseException e) {
+            System.out.println("Parse Error.");
+        }
+        return null;
     }
 }
